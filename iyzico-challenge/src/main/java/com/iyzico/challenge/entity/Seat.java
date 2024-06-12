@@ -1,60 +1,39 @@
 package com.iyzico.challenge.entity;
 
+import com.iyzico.challenge.dto.SeatStatus;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-public class Seat {
+@Table(name = "seats", uniqueConstraints = @UniqueConstraint(columnNames = {"seat_number", "flight_id"}))
+@Getter
+@Setter
+@NoArgsConstructor
+public class Seat extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "seat_number", nullable = false)
     private String seatNumber;
+
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
-    private boolean available = true;
+
+    @Column(name = "seat_status", nullable = false)
+    private SeatStatus seatStatus = SeatStatus.AVAILABLE;
 
     @ManyToOne
-    @JoinColumn(name = "flight_id")
+    @JoinColumn(name = "flight_id", nullable = false)
     private Flight flight;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    public void sold() {
+        this.seatStatus = SeatStatus.SOLD;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void available() {
+        this.seatStatus = SeatStatus.AVAILABLE;
     }
 
-    public String getSeatNumber() {
-        return seatNumber;
-    }
-
-    public void setSeatNumber(String seatNumber) {
-        this.seatNumber = seatNumber;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
-    public Flight getFlight() {
-        return flight;
-    }
-
-    public void setFlight(Flight flight) {
-        this.flight = flight;
-    }
 }

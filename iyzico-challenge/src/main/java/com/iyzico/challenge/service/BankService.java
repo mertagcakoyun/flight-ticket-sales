@@ -1,5 +1,7 @@
 package com.iyzico.challenge.service;
 
+import com.iyzico.challenge.dto.request.BankPaymentRequest;
+import com.iyzico.challenge.dto.response.BankPaymentResponse;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,5 +1,7 @@
 package com.iyzico.challenge.service;
 
+import com.iyzico.challenge.dto.request.BankPaymentRequest;
+import com.iyzico.challenge.dto.response.BankPaymentResponse;
 import com.iyzico.challenge.entity.Payment;
 import com.iyzico.challenge.repository.PaymentRepository;
 import org.slf4j.Logger;
