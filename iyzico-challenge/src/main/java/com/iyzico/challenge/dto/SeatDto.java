@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class SeatDTO {
+public class SeatDto {
 
     private String seatNumber;
     private BigDecimal price;

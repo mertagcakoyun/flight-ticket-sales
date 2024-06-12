@@ -1,7 +1,7 @@
 package com.iyzico.challenge.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iyzico.challenge.dto.SeatDTO;
+import com.iyzico.challenge.dto.SeatDto;
 import com.iyzico.challenge.dto.SeatStatus;
 import com.iyzico.challenge.dto.response.SeatResponse;
 import com.iyzico.challenge.entity.Flight;
@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +32,7 @@ public class SeatService {
         this.objectMapper = objectMapper;
     }
 
-    public SeatResponse addSeat(SeatDTO newSeat) {
+    public SeatResponse addSeat(SeatDto newSeat) {
         Flight flight = flightRepository.findById(newSeat.getFlightId())
                 .orElseThrow(() -> new FlightException(HttpStatus.NOT_FOUND, "Flight not found with id " + newSeat.getFlightId()));
 
@@ -56,7 +55,7 @@ public class SeatService {
     }
 
 
-    public SeatResponse updateSeat(SeatDTO seatUpdate) {
+    public SeatResponse updateSeat(SeatDto seatUpdate) {
         Flight flight = flightRepository.findById(seatUpdate.getFlightId())
                 .orElseThrow(() -> new RuntimeException("Flight not found with id " + seatUpdate.getFlightId()));
         Optional<Seat> seatOptional = seatRepository.findBySeatNumberAndFlightId(seatUpdate.getSeatNumber(), seatUpdate.getFlightId());
@@ -119,8 +118,10 @@ public class SeatService {
         switch (status) {
             case SOLD:
                 seat.sold();
+                break;
             case AVAILABLE:
                 seat.available();
+                break;
         }
         Flight flight = flightRepository.findById(seat.getFlight().getId()).orElse(null);
         if (flight == null) {
@@ -135,15 +136,25 @@ public class SeatService {
         if (seat.isEmpty()) {
             throw new SeatException(HttpStatus.NOT_FOUND, "Seat could not found for id:" + id);
         }
-        return objectMapper.convertValue(seat, SeatResponse.class);
+        return convertToSeatResponse(seat.get());
     }
 
-    private static Seat createNewSeat(SeatDTO seat, Flight flight) {
+    private static Seat createNewSeat(SeatDto seat, Flight flight) {
         Seat newSeat = new Seat();
         newSeat.setSeatNumber(seat.getSeatNumber());
         newSeat.setSeatStatus(seat.getSeatStatus());
         newSeat.setPrice(seat.getPrice());
         newSeat.setFlight(flight);
         return newSeat;
+    }
+
+    private SeatResponse convertToSeatResponse(Seat seat) {
+        SeatResponse seatResponse = new SeatResponse();
+        seatResponse.setId(seat.getId());
+        seatResponse.setSeatNumber(seat.getSeatNumber());
+        seatResponse.setSeatStatus(seat.getSeatStatus());
+        seatResponse.setPrice(seat.getPrice());
+        seatResponse.setFlightId(seat.getFlight().getId());
+        return seatResponse;
     }
 }

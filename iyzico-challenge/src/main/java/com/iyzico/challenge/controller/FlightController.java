@@ -1,7 +1,7 @@
 package com.iyzico.challenge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iyzico.challenge.dto.FlightDTO;
+import com.iyzico.challenge.dto.FlightDto;
 import com.iyzico.challenge.dto.FlightResponse;
 import com.iyzico.challenge.dto.request.FlightRequest;
 import com.iyzico.challenge.service.FlightService;
@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/flights")
@@ -26,14 +26,14 @@ public class FlightController {
     }
 
     @PostMapping
-    public ResponseEntity<FlightResponse> addFlight(@RequestBody FlightRequest flight) {
-        FlightResponse requestedFlight = flightService.addFlight(objectMapper.convertValue(flight, FlightDTO.class));
+    public ResponseEntity<FlightResponse> addFlight( @Valid @RequestBody FlightRequest flight) {
+        FlightResponse requestedFlight = flightService.addFlight(objectMapper.convertValue(flight, FlightDto.class));
         return new ResponseEntity<>(requestedFlight, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<FlightResponse> updateFlight(@RequestBody FlightRequest flight) {
-        FlightDTO flightDTO = objectMapper.convertValue(flight, FlightDTO.class);
+    public ResponseEntity<FlightResponse> updateFlight(@Valid @RequestBody FlightRequest flight) {
+        FlightDto flightDTO = objectMapper.convertValue(flight, FlightDto.class);
         FlightResponse updatedFlight = flightService.updateFlight(flightDTO);
         return new ResponseEntity<>(updatedFlight, HttpStatus.OK);
     }
@@ -47,7 +47,7 @@ public class FlightController {
     @GetMapping("/{id}")
     public ResponseEntity<FlightResponse> getFlightById(@PathVariable Long id) {
         try {
-            FlightDTO flight = flightService.getFlight(id);
+            FlightDto flight = flightService.getFlight(id);
             FlightResponse response = objectMapper.convertValue(flight, FlightResponse.class);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalArgumentException e) {

@@ -1,14 +1,13 @@
 package com.iyzico.challenge.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iyzico.challenge.dto.FlightDTO;
+import com.iyzico.challenge.dto.FlightDto;
 import com.iyzico.challenge.dto.FlightResponse;
 import com.iyzico.challenge.dto.response.SeatResponse;
 import com.iyzico.challenge.entity.Flight;
 import com.iyzico.challenge.entity.Seat;
 import com.iyzico.challenge.exception.FlightException;
 import com.iyzico.challenge.repository.FlightRepository;
-import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,15 +32,15 @@ public class FlightService {
         this.objectMapper = objectMapper;
     }
 
-    public FlightDTO getFlight(Long flightId) {
+    public FlightDto getFlight(Long flightId) {
         Optional<Flight> flight = flightRepository.findById(flightId);
         if (flight.isEmpty()) {
             throw new FlightException(HttpStatus.NOT_FOUND, "Flight not found for id:" + flightId);
         }
-        return objectMapper.convertValue(flight.get(), FlightDTO.class);
+        return objectMapper.convertValue(flight.get(), FlightDto.class);
     }
 
-    public FlightResponse addFlight(FlightDTO flightDTO) {
+    public FlightResponse addFlight(FlightDto flightDTO) {
         try {
             Flight flight = flightRepository.save(objectMapper.convertValue(flightDTO, Flight.class));
             return objectMapper.convertValue(flight, FlightResponse.class);
@@ -53,9 +51,9 @@ public class FlightService {
         }
     }
 
-    public FlightResponse updateFlight(FlightDTO flightDTO) {
+    public FlightResponse updateFlight(FlightDto flightDTO) {
         try {
-            FlightDTO updatedFlight = getFlight(flightDTO.getId());
+            FlightDto updatedFlight = getFlight(flightDTO.getId());
             if (flightDTO.getName() != null) {
                 updatedFlight.setName(flightDTO.getName());
             }
@@ -96,13 +94,13 @@ public class FlightService {
     }
 
     public FlightResponse getFlightWithAvailableSeats(Long flightId) {
-        FlightDTO flight = getFlight(flightId);
+        FlightDto flight = getFlight(flightId);
         return mapToFlightResponseWithAvailableSeats(objectMapper.convertValue(flight, Flight.class));
     }
     private FlightResponse mapToFlightResponseWithAvailableSeats(Flight flight) {
         FlightResponse flightWithSeatsResponse = objectMapper.convertValue(flight, FlightResponse.class);
         List<SeatResponse> seatResponses = flight.availableSeatList().stream()
-                .map(this::mapToSeatResponse)
+                .map(seat-> mapToSeatResponse(seat))
                 .collect(Collectors.toList());
         flightWithSeatsResponse.setSeats(seatResponses);
         return flightWithSeatsResponse;

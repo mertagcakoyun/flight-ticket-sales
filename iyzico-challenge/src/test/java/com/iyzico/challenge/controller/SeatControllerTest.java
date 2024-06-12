@@ -1,118 +1,141 @@
 package com.iyzico.challenge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iyzico.challenge.dto.FlightDTO;
-import com.iyzico.challenge.dto.FlightResponse;
-import com.iyzico.challenge.entity.Flight;
-import com.iyzico.challenge.service.FlightService;
+import com.iyzico.challenge.dto.SeatDto;
+import com.iyzico.challenge.dto.SeatStatus;
+import com.iyzico.challenge.dto.request.SeatRequest;
+import com.iyzico.challenge.dto.response.SeatResponse;
+import com.iyzico.challenge.service.SeatService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.mockito.*;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(FlightController.class)
 public class SeatControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Mock
+    private SeatService seatService;
 
-    @MockBean
-    private FlightService flightService;
+    @InjectMocks
+    private SeatController seatController;
 
-    @Autowired
+    @Mock
     private ObjectMapper objectMapper;
 
-    @Test
-    public void testAddFlight() throws Exception {
-        Flight flight = new Flight();
-        flight.setName("Test Flight");
-        flight.setDescription("Test Description");
-        FlightResponse flightResponse = new FlightResponse();
-        flightResponse.setName("Test Flight");
-        flightResponse.setDescription("Test Description");
+    private MockMvc mockMvc;
 
-        Mockito.when(flightService.addFlight(Mockito.any(FlightDTO.class))).thenReturn(flightResponse);
-
-        mockMvc.perform(post("/api/flights")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(flight)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value(flight.getName()))
-                .andExpect(jsonPath("$.description").value(flight.getDescription()));
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(seatController).build();
     }
 
     @Test
-    public void testUpdateFlight() throws Exception {
-        Flight flight = new Flight();
-        flight.setId(1L);
-        flight.setName("Updated Flight");
-        flight.setDescription("Updated Description");
-        FlightResponse flightResponse = new FlightResponse();
-        flightResponse.setName("Test Flight");
-        flightResponse.setDescription("Test Description");
+    public void testAddSeat() throws Exception {
+        SeatRequest seatRequest = new SeatRequest();
+        seatRequest.setSeatNumber("1A");
+        seatRequest.setSeatPrice(BigDecimal.valueOf(100.00));
+        seatRequest.setFlightId(1L);
+        seatRequest.setStatus(SeatStatus.AVAILABLE);
 
-        Mockito.when(flightService.updateFlight(Mockito.any(FlightDTO.class))).thenReturn(flightResponse);
+        SeatDto seatDto = new SeatDto();
+        seatDto.setSeatNumber("1A");
+        seatDto.setPrice(BigDecimal.valueOf(100.00));
+        seatDto.setFlightId(1L);
+        seatDto.setSeatStatus(SeatStatus.AVAILABLE);
 
-        mockMvc.perform(put("/api/flights")
+        SeatResponse seatResponse = new SeatResponse();
+        seatResponse.setSeatNumber("1A");
+        seatResponse.setPrice(BigDecimal.valueOf(100.00));
+        seatResponse.setFlightId(1L);
+        seatResponse.setSeatStatus(SeatStatus.AVAILABLE);
+
+        when(objectMapper.convertValue(any(SeatRequest.class), eq(SeatDto.class))).thenReturn(seatDto);
+        when(seatService.addSeat(any(SeatDto.class))).thenReturn(seatResponse);
+
+        mockMvc.perform(post("/api/seats")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(flight)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(flight.getName()))
-                .andExpect(jsonPath("$.description").value(flight.getDescription()));
+                        .content(new ObjectMapper().writeValueAsString(seatRequest)))
+                .andExpect(status().isCreated());
+
+        verify(seatService).addSeat(any(SeatDto.class));
     }
 
     @Test
-    public void testRemoveFlight() throws Exception {
-        Mockito.doNothing().when(flightService).removeFlight(1L);
+    public void testUpdateSeat() throws Exception {
+        SeatRequest seatRequest = new SeatRequest();
+        seatRequest.setSeatNumber("1A");
+        seatRequest.setSeatPrice(BigDecimal.valueOf(100.00));
+        seatRequest.setFlightId(1L);
+        seatRequest.setStatus(SeatStatus.AVAILABLE);
 
-        mockMvc.perform(delete("/api/flights/1"))
+        SeatDto seatDto = new SeatDto();
+        seatDto.setSeatNumber("1A");
+        seatDto.setPrice(BigDecimal.valueOf(100.00));
+        seatDto.setFlightId(1L);
+        seatDto.setSeatStatus(SeatStatus.AVAILABLE);
+
+        SeatResponse seatResponse = new SeatResponse();
+        seatResponse.setSeatNumber("1A");
+        seatResponse.setPrice(BigDecimal.valueOf(100.00));
+        seatResponse.setFlightId(1L);
+        seatResponse.setSeatStatus(SeatStatus.AVAILABLE);
+
+        when(objectMapper.convertValue(any(SeatRequest.class), eq(SeatDto.class))).thenReturn(seatDto);
+        when(seatService.updateSeat(any(SeatDto.class))).thenReturn(seatResponse);
+
+        mockMvc.perform(put("/api/seats")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(seatRequest)))
+                .andExpect(status().isOk());
+
+        verify(seatService).updateSeat(any(SeatDto.class));
+    }
+
+    @Test
+    public void testRemoveSeat() throws Exception {
+        Long flightId = 1L;
+        List<String> seatNumbers = Arrays.asList("1A", "1B");
+
+        mockMvc.perform(delete("/api/seats")
+                        .param("flightId", String.valueOf(flightId))
+                        .param("seatNumbers", String.join(",", seatNumbers)))
                 .andExpect(status().isNoContent());
+
+        verify(seatService).removeSeat(eq(flightId), eq(seatNumbers));
     }
 
     @Test
-    public void testListFlights() throws Exception {
-        Flight flight = new Flight();
-        flight.setName("Test Flight");
-        flight.setDescription("Test Description");
-        FlightResponse flightResponse = new FlightResponse();
-        flightResponse.setName("Test Flight");
-        flightResponse.setDescription("Test Description");
+    public void testFindSeatById() throws Exception {
+        Long seatId = 1L;
+        SeatResponse seatResponse = new SeatResponse();
+        seatResponse.setId(seatId);
+        seatResponse.setSeatNumber("1A");
+        seatResponse.setPrice(BigDecimal.valueOf(100.00));
+        seatResponse.setFlightId(1L);
+        seatResponse.setSeatStatus(SeatStatus.AVAILABLE);
 
-        Mockito.when(flightService.listFlights(Pageable.unpaged())).thenReturn((Page<FlightResponse>) Collections.singletonList(flightResponse));
+        when(seatService.findSeatById(seatId)).thenReturn(seatResponse);
 
-        mockMvc.perform(get("/api/flights"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value(flight.getName()))
-                .andExpect(jsonPath("$[0].description").value(flight.getDescription()));
-    }
+        mockMvc.perform(get("/api/seats/{id}", seatId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
-    @Test
-    public void testFindFlightById() throws Exception {
-        Flight flight = new Flight();
-        flight.setId(1L);
-        flight.setName("Test Flight");
-        flight.setDescription("Test Description");
-        FlightResponse flightResponse = new FlightResponse();
-        flightResponse.setName("Test Flight");
-        flightResponse.setDescription("Test Description");
-
-        Mockito.when(flightService.findFlightById(1L)).thenReturn(flightResponse);
-
-        mockMvc.perform(get("/api/flights/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(flight.getName()))
-                .andExpect(jsonPath("$.description").value(flight.getDescription()));
+        verify(seatService).findSeatById(seatId);
     }
 }

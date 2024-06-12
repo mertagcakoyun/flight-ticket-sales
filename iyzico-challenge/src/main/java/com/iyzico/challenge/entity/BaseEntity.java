@@ -1,5 +1,6 @@
 package com.iyzico.challenge.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,12 +23,15 @@ public abstract class BaseEntity {
 
   @CreatedDate
   @Column(name = "createdDate", nullable = false, updatable = false)
+  @JsonIgnore
   protected LocalDateTime createdDate;
 
   @LastModifiedDate
   @Column(name = "modifiedDate")
+  @JsonIgnore
   protected LocalDateTime modifiedDate;
 
   @Version
+  @JsonIgnore
   private Integer version;
 }

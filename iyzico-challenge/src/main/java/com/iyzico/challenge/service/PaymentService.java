@@ -2,7 +2,6 @@ package com.iyzico.challenge.service;
 
 import com.iyzico.challenge.dto.SeatStatus;
 import com.iyzico.challenge.dto.request.PaymentRequest;
-import com.iyzico.challenge.dto.response.SeatResponse;
 import com.iyzico.challenge.entity.Seat;
 import com.iyzico.challenge.exception.PaymentException;
 import com.iyzico.challenge.exception.SeatException;
@@ -35,7 +34,7 @@ public class PaymentService {
     }
 
     @Transactional
-    public String processPayment(PaymentRequest paymentRequest) {
+    public String pay(PaymentRequest paymentRequest) {
         try {
             flightService.getFlight(paymentRequest.getFlightId());
             Seat seat = seatRepository.findById(paymentRequest.getSeatId()).orElse(null);

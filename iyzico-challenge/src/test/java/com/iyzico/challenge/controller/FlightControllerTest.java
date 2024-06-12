@@ -1,7 +1,7 @@
 package com.iyzico.challenge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iyzico.challenge.dto.FlightDTO;
+import com.iyzico.challenge.dto.FlightDto;
 import com.iyzico.challenge.dto.FlightResponse;
 import com.iyzico.challenge.dto.request.FlightRequest;
 import com.iyzico.challenge.service.FlightService;
@@ -14,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -39,10 +37,10 @@ class FlightControllerTest {
     @Test
     void testAddFlight() {
         FlightRequest request = new FlightRequest();
-        FlightDTO flightDTO = new FlightDTO();
+        FlightDto flightDTO = new FlightDto();
         FlightResponse expectedResponse = new FlightResponse();
 
-        when(objectMapper.convertValue(request, FlightDTO.class)).thenReturn(flightDTO);
+        when(objectMapper.convertValue(request, FlightDto.class)).thenReturn(flightDTO);
         when(flightService.addFlight(flightDTO)).thenReturn(expectedResponse);
 
         ResponseEntity<FlightResponse> responseEntity = flightController.addFlight(request);
@@ -54,10 +52,10 @@ class FlightControllerTest {
     @Test
     void testUpdateFlight() {
         FlightRequest request = new FlightRequest();
-        FlightDTO flightDTO = new FlightDTO();
+        FlightDto flightDTO = new FlightDto();
         FlightResponse expectedResponse = new FlightResponse();
 
-        when(objectMapper.convertValue(request, FlightDTO.class)).thenReturn(flightDTO);
+        when(objectMapper.convertValue(request, FlightDto.class)).thenReturn(flightDTO);
         when(flightService.updateFlight(flightDTO)).thenReturn(expectedResponse);
 
         ResponseEntity<FlightResponse> responseEntity = flightController.updateFlight(request);
@@ -78,7 +76,7 @@ class FlightControllerTest {
     @Test
     void testGetFlightById_Success() {
         Long id = 1L;
-        FlightDTO flightDTO = new FlightDTO();
+        FlightDto flightDTO = new FlightDto();
         FlightResponse expectedResponse = new FlightResponse();
 
         when(flightService.getFlight(id)).thenReturn(flightDTO);
@@ -101,16 +99,18 @@ class FlightControllerTest {
         assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
     }
 
+
     @Test
     void testGetFlightById_NotFound() {
         Long id = 1L;
 
-        when(flightService.getFlight(id)).thenThrow(new Exception());
+        when(flightService.getFlight(id)).thenThrow(new RuntimeException());
 
         ResponseEntity<FlightResponse> responseEntity = flightController.getFlightById(id);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
+
 
     @Test
     void testGetAllFlight() {
