@@ -15,10 +15,10 @@ import java.math.BigDecimal;
 @Transactional
 public class IyzicoPaymentService {
 
-    private Logger logger = LoggerFactory.getLogger(IyzicoPaymentService.class);
+    private final Logger logger = LoggerFactory.getLogger(IyzicoPaymentService.class);
 
-    private BankService bankService;
-    private PaymentRepository paymentRepository;
+    private final BankService bankService;
+    private final PaymentRepository paymentRepository;
 
     public IyzicoPaymentService(BankService bankService, PaymentRepository paymentRepository) {
         this.bankService = bankService;

@@ -56,7 +56,7 @@ public class PaymentServiceTest {
         paymentRequest.setFlightId(123L);
 
         when(flightService.getFlight(paymentRequest.getFlightId())).thenReturn(null); // Flight object not needed
-        when(seatRepository.findById(paymentRequest.getSeatId())).thenReturn(Optional.of(seat));
+        when(seatRepository.findByIdForUpdate(paymentRequest.getSeatId())).thenReturn(Optional.of(seat));
         when(paymentServiceClients.call(seat.getPrice())).thenReturn(CompletableFuture.completedFuture("success"));
 
         String result = paymentService.pay(paymentRequest);

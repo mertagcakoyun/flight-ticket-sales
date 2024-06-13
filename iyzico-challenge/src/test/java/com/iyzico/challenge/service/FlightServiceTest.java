@@ -3,9 +3,7 @@ package com.iyzico.challenge.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iyzico.challenge.dto.FlightDto;
 import com.iyzico.challenge.dto.FlightResponse;
-import com.iyzico.challenge.dto.SeatStatus;
 import com.iyzico.challenge.entity.Flight;
-import com.iyzico.challenge.entity.Seat;
 import com.iyzico.challenge.exception.FlightException;
 import com.iyzico.challenge.repository.FlightRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -177,21 +175,4 @@ public class FlightServiceTest {
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
         assertEquals("Flight could not found for flight id: 1", exception.getMessage());
     }
-
-//    @Test
-//    public void testGetFlightWithAvailableSeats_Success() {
-//        Seat seat = new Seat();
-//        seat.setSeatNumber("1A");
-//        seat.setSeatStatus(SeatStatus.AVAILABLE);
-//        seat.setFlight(flight);
-//        flight.getSeats().add(seat);
-//
-//        when(flightRepository.findById(1L)).thenReturn(Optional.of(flight));
-//
-//        FlightResponse response = flightService.getFlightWithAvailableSeats(1L);
-//
-//        assertEquals(flight.getId(), response.getId());
-//        assertEquals(1, response.getSeats().size());
-//        assertEquals("1A", response.getSeats().get(0).getSeatNumber());
-//    }
 }

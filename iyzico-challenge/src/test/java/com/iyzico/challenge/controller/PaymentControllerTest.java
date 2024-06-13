@@ -26,9 +26,6 @@ public class PaymentControllerTest {
     @InjectMocks
     private PaymentController paymentController;
 
-    @Mock
-    private ObjectMapper objectMapper;
-
     private MockMvc mockMvc;
 
     @BeforeEach

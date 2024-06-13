@@ -37,11 +37,13 @@ public class PaymentService {
     public String pay(PaymentRequest paymentRequest) {
         try {
             flightService.getFlight(paymentRequest.getFlightId());
-            Seat seat = seatRepository.findById(paymentRequest.getSeatId()).orElse(null);
+            Seat seat = seatRepository.findByIdForUpdate(paymentRequest.getSeatId()).orElse(null);
             if (seat == null) {
                 throw new SeatException(HttpStatus.NOT_FOUND, "Seat could not found for id:" + paymentRequest.getSeatId());
             }
-
+            if (seat.getSeatStatus() == SeatStatus.SOLD) {
+                throw new SeatException(HttpStatus.CONFLICT, "Seat is already sold: " + paymentRequest.getSeatId());
+            }
             seatService.changeSeatStatus(paymentRequest.getSeatId(), SeatStatus.SOLD);
             CompletableFuture<String> paymentStatus = paymentServiceClients.call(seat.getPrice());
             if (!paymentStatus.get().equals("success")) {
