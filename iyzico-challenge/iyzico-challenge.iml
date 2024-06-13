@@ -5,7 +5,9 @@
       <configuration>
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
-        <datasource-mapping />
+        <datasource-mapping>
+          <factory-entry name="iyzico-challenge" value="3f18f6fd-033e-46be-a720-6abb68993977" />
+        </datasource-mapping>
         <naming-strategy-map />
       </configuration>
     </facet>

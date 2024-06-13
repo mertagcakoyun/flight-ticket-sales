@@ -36,7 +36,7 @@ public class SeatService {
         Flight flight = flightRepository.findById(newSeat.getFlightId())
                 .orElseThrow(() -> new FlightException(HttpStatus.NOT_FOUND, "Flight not found with id " + newSeat.getFlightId()));
 
-        Optional<Seat> existingSeat = seatRepository.findBySeatNumberAndFlightId(newSeat.getSeatNumber(), newSeat.getFlightId());
+        Optional<Seat> existingSeat = seatRepository.findBySeatNumberAndFlight(newSeat.getSeatNumber(),flight);
         if (existingSeat.isPresent()) {
             throw new SeatException(HttpStatus.CONFLICT, "Seat already exists with seat number " + newSeat.getSeatNumber() + " for flight id " + flight.getId());
         }
@@ -58,7 +58,7 @@ public class SeatService {
     public SeatResponse updateSeat(SeatDto seatUpdate) {
         Flight flight = flightRepository.findById(seatUpdate.getFlightId())
                 .orElseThrow(() -> new RuntimeException("Flight not found with id " + seatUpdate.getFlightId()));
-        Optional<Seat> seatOptional = seatRepository.findBySeatNumberAndFlightId(seatUpdate.getSeatNumber(), seatUpdate.getFlightId());
+        Optional<Seat> seatOptional = seatRepository.findBySeatNumberAndFlight(seatUpdate.getSeatNumber(), flight);
         if (seatOptional.isEmpty()) {
             logger.error("Seat not found with seat number " + seatUpdate.getSeatNumber() + " for flight id " + seatUpdate.getFlightId());
             throw new SeatException(HttpStatus.NOT_FOUND, "Seat not found with seat number " + seatUpdate.getSeatNumber() + " for flight id " + seatUpdate.getFlightId());
@@ -102,7 +102,7 @@ public class SeatService {
     }
 
     public Seat getSeatByFlightAndSeatNumber(final Flight flight, final String seatNumber) {
-        Optional<Seat> seatOptional = seatRepository.findBySeatNumberAndFlightId(seatNumber, flight.getId());
+        Optional<Seat> seatOptional = seatRepository.findBySeatNumberAndFlight(seatNumber, flight);
         if (seatOptional.isEmpty()) {
             logger.error("Seat could not found for seat number: {}", seatNumber);
             throw new SeatException(HttpStatus.NOT_FOUND, "Seat could not found for seat number: " + seatNumber);

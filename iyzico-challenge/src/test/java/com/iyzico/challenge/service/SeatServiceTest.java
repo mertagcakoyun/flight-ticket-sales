@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -68,7 +67,7 @@ public class SeatServiceTest {
         newSeat.setSeatStatus(SeatStatus.AVAILABLE);
 
         when(flightRepository.findById(1L)).thenReturn(Optional.of(flight));
-        when(seatRepository.findBySeatNumberAndFlightId("1A", 1L)).thenReturn(Optional.empty());
+        when(seatRepository.findBySeatNumberAndFlight("1A", flight)).thenReturn(Optional.empty());
         when(seatRepository.save(any(Seat.class))).thenReturn(seat);
 
         SeatResponse response = seatService.addSeat(newSeat);
@@ -106,7 +105,7 @@ public class SeatServiceTest {
         newSeat.setSeatStatus(SeatStatus.AVAILABLE);
 
         when(flightRepository.findById(1L)).thenReturn(Optional.of(flight));
-        when(seatRepository.findBySeatNumberAndFlightId("1A", 1L)).thenReturn(Optional.of(seat));
+        when(seatRepository.findBySeatNumberAndFlight("1A", flight)).thenReturn(Optional.of(seat));
 
         SeatException exception = assertThrows(SeatException.class, () -> seatService.addSeat(newSeat));
        // assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
@@ -122,7 +121,7 @@ public class SeatServiceTest {
         seatUpdate.setSeatStatus(SeatStatus.SOLD);
 
         when(flightRepository.findById(1L)).thenReturn(Optional.of(flight));
-        when(seatRepository.findBySeatNumberAndFlightId("1A", 1L)).thenReturn(Optional.of(seat));
+        when(seatRepository.findBySeatNumberAndFlight("1A", flight)).thenReturn(Optional.of(seat));
         when(seatRepository.save(any(Seat.class))).thenReturn(seat);
 
         SeatResponse response = seatService.updateSeat(seatUpdate);
@@ -160,7 +159,7 @@ public class SeatServiceTest {
         seatUpdate.setSeatStatus(SeatStatus.SOLD);
 
         when(flightRepository.findById(1L)).thenReturn(Optional.of(flight));
-        when(seatRepository.findBySeatNumberAndFlightId("1A", 1L)).thenReturn(Optional.empty());
+        when(seatRepository.findBySeatNumberAndFlight("1A", flight)).thenReturn(Optional.empty());
 
         SeatException exception = assertThrows(SeatException.class, () -> seatService.updateSeat(seatUpdate));
       //  assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
@@ -170,7 +169,7 @@ public class SeatServiceTest {
     @Test
     public void testRemoveSeat_Success() {
         when(flightRepository.findById(1L)).thenReturn(Optional.of(flight));
-        when(seatRepository.findBySeatNumberAndFlightId("1A", 1L)).thenReturn(Optional.of(seat));
+        when(seatRepository.findBySeatNumberAndFlight("1A", flight)).thenReturn(Optional.of(seat));
 
         seatService.removeSeat(1L, List.of("1A"));
 
@@ -191,7 +190,7 @@ public class SeatServiceTest {
         seat.setSeatStatus(SeatStatus.SOLD);
 
         when(flightRepository.findById(1L)).thenReturn(Optional.of(flight));
-        when(seatRepository.findBySeatNumberAndFlightId("1A", 1L)).thenReturn(Optional.of(seat));
+        when(seatRepository.findBySeatNumberAndFlight("1A", flight)).thenReturn(Optional.of(seat));
 
         SeatException exception = assertThrows(SeatException.class, () -> seatService.removeSeat(1L, List.of("1A")));
    //     assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());

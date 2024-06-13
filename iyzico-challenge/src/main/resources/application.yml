@@ -20,3 +20,10 @@ spring:
       settings:
         trace: false
         web-allow-others: false
+
+
+http:
+  iyzico:
+    url: https://sandbox-api.iyzipay.com
+    api-key: sandbox-EmWD81hz2LKzhQEhQnjol #Dummy variable set after testing
+    secret-key: sandbox-mqUH5G0A8cDTUCzWAe7 #Dummy variable set after testing
