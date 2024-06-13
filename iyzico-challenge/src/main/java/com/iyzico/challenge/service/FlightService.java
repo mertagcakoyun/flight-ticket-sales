@@ -19,7 +19,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+/**
+ * FlightService is a service class responsible for managing operations related to flights.
+ * It performs basic operations such as adding, updating, deleting, and listing flights.
+ * Additionally, it provides details of flights and information about available seats.
+ */
 @Service
 public class FlightService {
 

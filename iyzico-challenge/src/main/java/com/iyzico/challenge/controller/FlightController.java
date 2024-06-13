@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 
 import javax.validation.Valid;
+/**
+ * FlightController handles HTTP requests related to flights.
+ * It provides endpoints for adding, updating, removing, and retrieving flights.
+ * Additionally, it offers an endpoint to retrieve a flight with available seats.
+ */
 
 @RestController
 @RequestMapping("/api/flights")

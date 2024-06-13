@@ -7,7 +7,12 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-
+/**
+ * Seat is an entity class representing a seat on a flight.
+ * It contains information such as seat number, price, and seat status.
+ * Each seat is associated with a specific flight.
+ * This class provides methods to update the seat status, marking it as sold or available.
+ */
 @Entity
 @Table(name = "seats", uniqueConstraints = @UniqueConstraint(columnNames = {"seat_number", "flight_id"}))
 @Getter

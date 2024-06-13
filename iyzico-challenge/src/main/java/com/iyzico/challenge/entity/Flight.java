@@ -12,6 +12,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
+/**
+ * Flight is an entity class representing a flight.
+ * It contains information such as name, description, and a set of seats associated with the flight.
+ * This class provides a method to retrieve a list of available seats for the flight.
+ */
+
 @Entity
 @Table(name = "flights")
 @Getter

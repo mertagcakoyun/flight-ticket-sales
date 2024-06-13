@@ -16,6 +16,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * PaymentService is a service class responsible for handling payment operations.
+ * It manages the payment process for reserving seats on flights.
+ * This service ensures seat availability, processes payments, and updates seat statuses accordingly.
+ */
+
 @Service
 public class PaymentService {
 

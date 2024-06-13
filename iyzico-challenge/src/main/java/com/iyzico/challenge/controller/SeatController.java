@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * SeatController handles HTTP requests related to seats.
+ * It provides endpoints for adding, updating, removing, and retrieving seats.
+ */
 @RestController
 @RequestMapping("/api/seats")
 public class SeatController {
@@ -40,7 +44,7 @@ public class SeatController {
 
     @DeleteMapping()
     public ResponseEntity<Void> removeSeat(@RequestParam Long flightId, @RequestParam List<String> seatNumbers) {
-        seatService.removeSeat(flightId,seatNumbers);
+        seatService.removeSeat(flightId, seatNumbers);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

@@ -19,6 +19,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * SeatService is a service class responsible for managing operations related to seats.
+ * It handles operations such as adding, updating, and removing seats, as well as changing seat statuses.
+ * Additionally, it provides methods to find seats by ID and to retrieve seat details.
+ */
 @Service
 public class SeatService {
     private final Logger logger = LoggerFactory.getLogger(SeatService.class);
