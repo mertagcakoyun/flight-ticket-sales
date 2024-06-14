@@ -2,7 +2,6 @@ package com.iyzico.challenge.entity;
 
 import com.iyzico.challenge.dto.SeatStatus;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -22,14 +21,13 @@ import java.util.stream.Collectors;
 @Table(name = "flights")
 @Getter
 @Setter
-@NoArgsConstructor
 public class Flight extends BaseEntity {
-    @Column(name = "name", nullable = false)
+    @Column(name = "name",  unique = true)
     private String name;
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Seat> seats = new HashSet<>();
 
     public List<Seat> availableSeatList() {

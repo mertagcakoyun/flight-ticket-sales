@@ -41,22 +41,12 @@ public class SeatService {
         Flight flight = flightRepository.findById(newSeat.getFlightId())
                 .orElseThrow(() -> new FlightException(HttpStatus.NOT_FOUND, "Flight not found with id " + newSeat.getFlightId()));
 
-        Optional<Seat> existingSeat = seatRepository.findBySeatNumberAndFlight(newSeat.getSeatNumber(),flight);
+        Optional<Seat> existingSeat = seatRepository.findBySeatNumberAndFlight(newSeat.getSeatNumber(), flight);
         if (existingSeat.isPresent()) {
             throw new SeatException(HttpStatus.CONFLICT, "Seat already exists with seat number " + newSeat.getSeatNumber() + " for flight id " + flight.getId());
         }
-        Seat seat = createNewSeat(newSeat, flight);
-        updateFlightSeats(flight, seat);
-        seatRepository.save(seat);
-        return objectMapper.convertValue(newSeat, SeatResponse.class);
-    }
-
-    private void updateFlightSeats(Flight flight, Seat newSeat) {
-        Set<Seat> seatsOfFlight = flight.getSeats();
-        seatsOfFlight.removeIf(seat -> seat.getSeatNumber().equals(newSeat.getSeatNumber()));
-        seatsOfFlight.add(newSeat);
-        flight.setSeats(seatsOfFlight);
-        flightRepository.save(flight);
+        Seat seat = seatRepository.save(createNewSeat(newSeat, flight));
+        return objectMapper.convertValue(seat, SeatResponse.class);
     }
 
 
@@ -78,7 +68,6 @@ public class SeatService {
         if (seatUpdate.getSeatStatus() != null) {
             existingSeat.setSeatStatus(seatUpdate.getSeatStatus());
         }
-        updateFlightSeats(flight, existingSeat);
         seatRepository.save(existingSeat);
         return objectMapper.convertValue(seatUpdate, SeatResponse.class);
     }
@@ -132,7 +121,6 @@ public class SeatService {
         if (flight == null) {
             throw new FlightException(HttpStatus.NOT_FOUND, "Flight could not found for id: " + seat.getFlight().getId());
         }
-        updateFlightSeats(flight, seat);
         seatRepository.save(seat);
     }
 

@@ -23,11 +23,10 @@ public abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
     @CreatedDate
-    @Column(name = "createdDate", nullable = false, updatable = false)
+    @Column(name = "createdDate")
     @JsonIgnore
     protected LocalDateTime createdDate;
 

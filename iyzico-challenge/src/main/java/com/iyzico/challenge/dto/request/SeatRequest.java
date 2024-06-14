@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Setter
 public class SeatRequest {
     private String seatNumber;
-    private BigDecimal seatPrice;
+    private BigDecimal price;
     private Long flightId;
-    private SeatStatus status;
+    private SeatStatus seatStatus;
 }

@@ -1,8 +1,8 @@
 package com.iyzico.challenge.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iyzico.challenge.dto.SeatStatus;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -17,20 +17,20 @@ import java.math.BigDecimal;
 @Table(name = "seats", uniqueConstraints = @UniqueConstraint(columnNames = {"seat_number", "flight_id"}))
 @Getter
 @Setter
-@NoArgsConstructor
 public class Seat extends BaseEntity {
 
-    @Column(name = "seat_number", nullable = false)
+    @Column(name = "seat_number")
     private String seatNumber;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name = "seat_status", nullable = false)
+    @Column(name = "seat_status")
     private SeatStatus seatStatus = SeatStatus.AVAILABLE;
 
     @ManyToOne
-    @JoinColumn(name = "flight_id", nullable = false)
+    @JoinColumn(name = "flight_id")
+    @JsonIgnore
     private Flight flight;
 
     public void sold() {

@@ -44,6 +44,14 @@ public class FlightService {
         return objectMapper.convertValue(flight.get(), FlightDto.class);
     }
 
+    public Flight getDBFlight(Long flightId) {
+        Optional<Flight> flight = flightRepository.findById(flightId);
+        if (flight.isEmpty()) {
+            throw new FlightException(HttpStatus.NOT_FOUND, "Flight not found for id:" + flightId);
+        }
+        return flight.get();
+    }
+
     public FlightResponse addFlight(FlightDto flightDTO) {
         try {
             Flight flight = flightRepository.save(objectMapper.convertValue(flightDTO, Flight.class));
@@ -57,21 +65,17 @@ public class FlightService {
 
     public FlightResponse updateFlight(FlightDto flightDTO) {
         try {
-            FlightDto updatedFlight = getFlight(flightDTO.getId());
+            Flight updatedFlight = getDBFlight(flightDTO.getId());
             if (flightDTO.getName() != null) {
                 updatedFlight.setName(flightDTO.getName());
             }
             if (flightDTO.getDescription() != null) {
                 updatedFlight.setDescription(flightDTO.getDescription());
             }
-            if (flightDTO.getSeats() != null) {
-                updatedFlight.setSeats(flightDTO.getSeats());
-            }
-            Flight flight = objectMapper.convertValue(flightDTO, Flight.class);
-            flightRepository.save(flight);
+            flightRepository.save(updatedFlight);
             return objectMapper.convertValue(updatedFlight, FlightResponse.class);
         } catch (DataIntegrityViolationException e) {
-            throw new FlightException(HttpStatus.CONFLICT, "Flight " + flightDTO.getName() + " already exist");
+            throw new FlightException(HttpStatus.CONFLICT, "Flight " + flightDTO.getName() + " could not update");
         }
     }
 

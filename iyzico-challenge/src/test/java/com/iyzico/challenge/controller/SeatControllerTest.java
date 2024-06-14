@@ -10,17 +10,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -49,9 +43,9 @@ public class SeatControllerTest {
     public void testAddSeat() throws Exception {
         SeatRequest seatRequest = new SeatRequest();
         seatRequest.setSeatNumber("1A");
-        seatRequest.setSeatPrice(BigDecimal.valueOf(100.00));
+        seatRequest.setPrice(BigDecimal.valueOf(100.00));
         seatRequest.setFlightId(1L);
-        seatRequest.setStatus(SeatStatus.AVAILABLE);
+        seatRequest.setSeatStatus(SeatStatus.AVAILABLE);
 
         SeatDto seatDto = new SeatDto();
         seatDto.setSeatNumber("1A");
@@ -80,9 +74,9 @@ public class SeatControllerTest {
     public void testUpdateSeat() throws Exception {
         SeatRequest seatRequest = new SeatRequest();
         seatRequest.setSeatNumber("1A");
-        seatRequest.setSeatPrice(BigDecimal.valueOf(100.00));
+        seatRequest.setPrice(BigDecimal.valueOf(100.00));
         seatRequest.setFlightId(1L);
-        seatRequest.setStatus(SeatStatus.AVAILABLE);
+        seatRequest.setSeatStatus(SeatStatus.AVAILABLE);
 
         SeatDto seatDto = new SeatDto();
         seatDto.setSeatNumber("1A");

@@ -64,12 +64,14 @@ public class PaymentServiceIntegrationTest {
         seat.setFlight(flight);
 
         flight.setSeats(Set.of(seat));
-        flightRepository.saveAndFlush(flight);
-        seatRepository.saveAndFlush(seat);
+        flightRepository.save(flight);
+        seatRepository.save(seat);
 
         when(flightService.getFlight(anyLong())).thenReturn(flightDto);
 
     }
+    // Note: This test should be improved. It cannot fully test DB records right now.
+    // For this reason, the test cannot fully serve its purpose.
     @Test
     void testConcurrentPayments() throws Exception {
         PaymentRequest paymentRequest1 = new PaymentRequest();
