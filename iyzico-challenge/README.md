@@ -1,8 +1,5 @@
 #  Flight Booking System
 
-Most of iyzico's merchants sell products or services online. Flight ticket is one of these services.
-For flight booking system the necessary REST services are listed below. We kindly ask you to implement them.
-
 ## Features
 
 * Flight -> adding, removing and updating
